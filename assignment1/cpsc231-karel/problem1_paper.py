@@ -4,16 +4,17 @@ from karel import *
 
 begin_karel_program()
 
+def moveN(num):
+    for _ in range(num):
+        move()
+
 turn_left()
-move()
-move()
+moveN(2)
 turn_left()
-move()
-move()
+moveN(2)
 # out of the house
 turn_left()
-move()
-move()
+moveN(2)
 turn_left()
 move()
 pick_beeper()
@@ -33,8 +34,7 @@ move()
 move()
 for _ in range(3):
     turn_left()
-move()
-move()
+moveN(2)
 turn_left()
 # Karel's back in bed with the morning paper
 end_karel_program()
