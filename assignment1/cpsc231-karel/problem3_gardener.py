@@ -23,7 +23,6 @@ def startingPoint():
         turn_left()
     while(front_is_clear()):
         move()
-    put_beeper()
 
 def horizontalBeepers():
     if(left_is_clear()):
@@ -35,7 +34,6 @@ def horizontalBeepers():
             move()
         else:
             turn_right()
-    # turn_right()
 
 def verticalBeepers():
     while front_is_clear():
@@ -45,24 +43,31 @@ def verticalBeepers():
 
 begin_karel_program()
 
+# navigate to the initial point (quadrant 3)
 startingPoint()
 turn_around()
+# place the first beeper
+put_beeper()
+# move to the next quadrant (quadrant 4)
 changeQuadrant()
 move()
 turn_left()
+# place vertical and horizontal beepers in quadrant 3
 verticalBeepers()
 horizontalBeepers()
+
+# navigate to the next quadrant (quadrant 1)
 changeQuadrant()
-# move()
+# place beepers in quadrant 1
 horizontalBeepers()
+
+# navigate to quadrant 2 and place its beepers
 changeQuadrant()
-# turn_around()
-# verticalBeepers()
-#
-# while not(left_is_clear()):
-#     move()
-#     put_beeper()
-#
-# changeQuadrant()
-# horizontalBeepers()
+verticalBeepers()
+horizontalBeepers()
+
+# navigate to quadrant 3 and place the final beepers
+changeQuadrant()
+horizontalBeepers()
+
 end_karel_program()
