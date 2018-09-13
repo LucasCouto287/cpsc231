@@ -31,20 +31,21 @@ def finalBeeper():
     if (facing_north() and not front_is_clear() and not right_is_clear()):
         put_beeper()
 
+def main():
+    if not(front_is_clear()):
+            turn_left()
+
+    while (front_is_clear()):
+        if not (beepers_present()):
+            put_beeper()
+            forward()
+
+        if(front_is_clear()):
+            forward()
+            if (beepers_present()):
+                put_beeper()
 
 begin_karel_program()
-if not(front_is_clear()):
-        turn_left()
-
-while (front_is_clear()):
-    if not (beepers_present()):
-        put_beeper()
-        forward()
-
-    if(front_is_clear()):
-        forward()
-        if (beepers_present()):
-            put_beeper()
-
+main()
 finalBeeper()
 end_karel_program()
