@@ -27,6 +27,10 @@ def findDirection():
         elif not(left_is_clear()):
             turnRight(3)
 
+def finalBeeper():
+    if (facing_north() and not front_is_clear() and not right_is_clear()):
+        put_beeper()
+
 
 begin_karel_program()
 if not(front_is_clear()):
@@ -39,7 +43,8 @@ while (front_is_clear()):
 
     if(front_is_clear()):
         forward()
-        if not (beepers_present):
+        if (beepers_present()):
             put_beeper()
 
+finalBeeper()
 end_karel_program()
