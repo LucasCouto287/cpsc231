@@ -7,20 +7,25 @@ def turn_around():
     turn_left()
     turn_left()
 
+# navigate towards the east until it finds a beeper
 def travelEast():
-    if facing_west() and not front_is_clear():
+    if not facing_east():
         turn_around()
-    while front_is_clear() and facing_east() and not beepers_present():
+    move()
+    while front_is_clear() and not beepers_present():
         move()
 
+# navigate towards the west until it finds a beeper
 def travelWest():
-    if facing_east() and not front_is_clear():
+    if not facing_west():
         turn_around()
-    while front_is_clear() and facing_west():
+    move()
+    while front_is_clear() and not beepers_present():
         move()
-        if beepers_present():
-            break
 
+# if standing on a beeper which has another beeper next to it, pick the beeper and move on
+# if not, then put the adjacent beeper
+# (this effectively moves the east and west beepers closer and closer until the midpoint)
 def checkAndPlaceAdjacent():
     if front_is_clear() and beepers_present() and facing_west() or facing_east():
         pick_beeper()
@@ -28,52 +33,59 @@ def checkAndPlaceAdjacent():
         if not beepers_present():
             put_beeper()
 
+# check and remove adjacent beepers; this is used when the east and west beepers are close enough
+# this effectively removes any adjacent beepers until one is left (on the midpoint)
 def checkAndRemoveAdjacent():
-    if front_is_clear() and beepers_present() and facing_west() or facing_east():
+    if front_is_clear() and beepers_present():
         move()
         if beepers_present():
             pick_beeper()
-    if not left_is_clear():
-        turn_around()
-        move()
+        if not left_is_clear() and facing_west():
+            turn_around()
+            move()
+
 begin_karel_program()
 
-travelEast()
-put_beeper()
-turn_around()
-checkAndPlaceAdjacent()
-
-travelWest()
-put_beeper()
-turn_around()
-checkAndPlaceAdjacent()
-
-move()
+# travel back and forth from east to west and keep checking and removing adjacent beepers
+# until they are close to the midpoint
 travelEast()
 turn_around()
+put_beeper()
 checkAndPlaceAdjacent()
 
 travelWest()
 turn_around()
-# checkAndPlaceAdjacent()
+put_beeper()
+checkAndPlaceAdjacent()
 
-if facing_east() and beepers_present() and not right_is_clear():
+travelEast()
+turn_around()
+checkAndPlaceAdjacent()
+
+travelWest()
+turn_around()
+checkAndPlaceAdjacent()
+
+travelEast()
+turn_around()
+checkAndPlaceAdjacent()
+
+travelWest()
+turn_around()
+checkAndPlaceAdjacent()
+
+travelEast()
+turn_around()
+checkAndPlaceAdjacent()
+
+# a fail-safe method which performs a final check so that only one beeper is remaining in the world
+checkAndRemoveAdjacent()
+
+# extra condition statement in case any beepers are left over
+if front_is_clear() and not left_is_clear():
     move()
-    # while not beepers_present():
-    travelEast()
-    turn_around()
-    checkAndPlaceAdjacent()
-
-if facing_west() and not left_is_clear():
-    travelWest()
-    turn_around()
-    checkAndPlaceAdjacent()
-
-if facing_east() and beepers_present() and front_is_clear() and not right_is_clear():
+    pick_beeper()
     move()
-    travelEast()
-    turn_around()
-    checkAndPlaceAdjacent()
-    checkAndRemoveAdjacent()
+    put_beeper()
 
 end_karel_program()
