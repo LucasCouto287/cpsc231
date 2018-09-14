@@ -1,13 +1,7 @@
-"""
-This Karel the Robot program instructs Karel to draw a checkerboard using beepers, as described in Assignment 1-P3.
-    Author: Daanish Mazhar
-    Date:   Septemeber 2018
-"""
-from karel import *
+# Problem 5 - Checkerboard Karel
+# Abdullah Khan & Daanish Mazhar
 
-def turnRight(x):
-    for i in range(x):
-        turn_left()
+from karel import *
 
 def forward():
     move()
@@ -19,13 +13,15 @@ def findDirection():
             turn_left()
     elif (facing_west()):
         if not(front_is_clear()):
-            turnRight(3)
+            for i in range(3):
+                turn_left()
     elif (facing_north()):
         if not (right_is_clear()):
             if(left_is_clear()):
                 turn_left()
         elif not(left_is_clear()):
-            turnRight(3)
+            for i in range(3):
+                turn_left()
 
 def finalBeeper():
     if (facing_north() and not front_is_clear() and not right_is_clear()):
