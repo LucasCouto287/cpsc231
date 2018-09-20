@@ -155,7 +155,7 @@ def beepers_present():
 def beepers_in_bag():
     if not _ready():
         return False
-    return _karel.beepers >= 0.0
+    return _karel.beepers > 0.0
 
 
 def facing_north():
