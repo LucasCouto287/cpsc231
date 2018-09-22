@@ -3,6 +3,7 @@
 
 from karel import *
 
+#main sequence to be called in start karel
 def main():
 	put_beeper()
 	check_wall()
@@ -10,10 +11,12 @@ def main():
   		beepers_east()
   		beepers_west()
 
+#turn right three times (automate)
 def turn_right():
 	for i in range(3):
 		turn_left()
 
+#check beepers while east
 def beepers_east():
 	while(facing_east()):
 		move()
@@ -22,6 +25,7 @@ def beepers_east():
 			put_beeper()
 		up_east()
 
+#check beepers east while travelling up
 def up_east():
 	if(not front_is_clear()):
 		if(not beepers_present()):
@@ -38,6 +42,7 @@ def up_east():
 				move()
 				put_beeper()
 
+#check beepers while facing west
 def beepers_west():
 	while(facing_west()):
 		move()
@@ -46,6 +51,7 @@ def beepers_west():
 			put_beeper()
 		up_west()
 
+#check beepers west while travelling up
 def up_west():
 	if(not front_is_clear()):
 		if(not beepers_present()):
@@ -62,6 +68,7 @@ def up_west():
 				move()
 				put_beeper()
 
+#check for wall while on the edge of a line
 def check_wall():
 	if(not front_is_clear()):
 		turn_left()
@@ -71,6 +78,7 @@ def check_wall():
 				move()
 				put_beeper()
 
+#call main sequence
 begin_karel_program()
 main()
 end_karel_program()

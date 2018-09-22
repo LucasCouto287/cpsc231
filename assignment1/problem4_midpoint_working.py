@@ -3,6 +3,7 @@
 
 from karel import *
 
+#function to place beepers while finding modpoint
 def placeBeepers():
     while(front_is_clear()):
         move()
@@ -11,6 +12,7 @@ def placeBeepers():
     pick_beeper()
     move()
 
+#function to pickup beepers while finding modpoint (cleanup)
 def pickupBeepers():
     if(beepers_present()):
         while(beepers_present()):
@@ -22,15 +24,18 @@ def pickupBeepers():
             move()
             pickupBeepers()
 
+#placing the final beeper after finding midpoint thanks to functions above
 def finalBeeper():
     turn()
     move()
     put_beeper()
 
+#automate turning twice
 def turn():
     turn_left()
     turn_left()
 
+#call functions
 def main():
     placeBeepers()
     pickupBeepers()
