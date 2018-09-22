@@ -1,4 +1,4 @@
-# Problem 5 - Checkerboard Karel
+# Problem 6 - Hungry Karel
 # Abdullah Khan & Daanish Mazhar
 
 from karel import *
@@ -65,7 +65,7 @@ def findBeeperFinal():
         move()
     while(beepers_present()):
         pick_beeper()
-          
+
 
 def collapse():
     turn_left()

@@ -1,4 +1,4 @@
-# Problem 3 - Karel the Gardener
+# Problem 4 - Midpoint Karel
 # Daanish Mazhar & Abdullah Khan
 
 from karel import *
