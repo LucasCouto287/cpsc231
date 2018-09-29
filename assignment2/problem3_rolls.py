@@ -3,21 +3,24 @@
 
 import sys, random
 
-# number of rolls - input from terminal argument
-rolls = int(sys.argv[1])
+# number of turns to simulate - input from terminal argument
+turns = int(sys.argv[1])
 
-print("Rolling", rolls, "times...")
+# a list to hold all the number or rolls before pigging out
+# should equal to the number of turns to simulate ("turns" variable)
+counterList = []
 
-rolledNums = []
+# simulate one turn until pigging out
+def simulateTurn():
+    counter = 0
+    dice = 0
+    while not dice == 1:
+        dice = random.randint(1, 6)
+        counter += 1
+    counterList.append(counter)
 
-for index in range(rolls):
-    dice = random.randrange(1,7)
-    rolledNums.append(dice)
+for index in range(turns):
+    simulateTurn()
 
-# print("\n It took", rolledNums.index(1) + 1, "rolls to roll the first 1")
-# print("\n 1 was rolled", rolledNums.count(1), "times")
-
-if 1 in rolledNums:
-    print("\n Estimated expectation:", rolls / rolledNums.count(1))
-else:
-    print("1 wasn't rolled")
+print("Simulating", turns, "turns...")
+print("Estimated number of rolls before pigging out:", sum(counterList) / float(len(counterList)))
