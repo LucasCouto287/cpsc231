@@ -5,11 +5,8 @@
 import sys
 from collections import Counter
 
-# TODO: change back to sys.argv before submitting!
-# movies_file = sys.argv[1]
-movies_file = open("cpsc231-movies.txt")
-# ratings_file = sys.argv[2]
-ratings_file = "cpsc231-ratings.txt"
+movies_file = open(sys.argv[1])
+ratings_file = sys.argv[2]
 
 movie_input = movies_file.readlines()
 movies_file.close()
@@ -38,7 +35,7 @@ for index in range(len(ratingsList)):
             individualMoviesSeen.append(individualRatingList[ratingIndex])
     totalMoviesSeen.append(len(individualMoviesSeen))
 
-print("The average student in CPSC 231 has watched", sum(totalMoviesSeen) // len(totalMoviesSeen),"movies out of the 100.")
+print("The average student in CPSC 231 has watched", sum(totalMoviesSeen) // len(totalMoviesSeen),"(rounded) movies out of the 100.")
 
 # get the most popular movies in our class
 fav_movies_indices = []
@@ -62,7 +59,6 @@ print("\nThe least popular movies were:")
 for i in range(len(leastPopular)):
     print("   -", movie_input[leastPopular[i][0]].rstrip())
 
-
 # make a list with the average of all the non-zero ratings for each movie
 averageRatings = []
 
@@ -84,3 +80,20 @@ for i in range(5):
 print("\nThe lowest rated movies were:")
 for i in range(5):
     print("   -", movie_input[ratingIndices[len(ratingIndices) - 1 - i][1]].rstrip())
+
+varianceList = []
+
+for outerIndex in range(len(ratingsList[0])):
+    if [i[outerIndex] for i in ratingsList].count(0) >= 10:
+        singleMovieRatingList = [i[outerIndex] for i in ratingsList]
+        while 0 in singleMovieRatingList: singleMovieRatingList.remove(0)
+        mean = sum(singleMovieRatingList) / len(singleMovieRatingList)
+        variance = sum((x - mean) ** 2 for x in singleMovieRatingList) / len(singleMovieRatingList)
+        varianceList.append(variance)
+
+varianceIndices = sorted(((round(value, 4), index) for index, value in enumerate(varianceList)), reverse=True)
+
+# get the 5 movies with the highest variance (using the same method as before)
+print("\nThe most contentious movies were:")
+for i in range(5):
+    print("   -", movie_input[varianceIndices[i][1]].rstrip())
