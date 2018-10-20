@@ -17,7 +17,7 @@ customer_file.close()
 # get the customer name (the person who we are going to recommend the movies to)
 customerName = customer_input[0]
 customerRatings = []
-individualRatings = customer_input[1].replace(", ", "")
+individualRatings = customer_input[1].replace(",", "")
 
 for index in range(len(individualRatings) - 1):
     customerRatings.append(int(individualRatings[index]))
@@ -48,12 +48,6 @@ for index in range(len(ratingsList)):
 
 similarityScores = []
 
-# for index in range(len(ratingsList)):
-#     # don't include the customer's own ratings
-#     if not (index + 1) == customerIndex:
-#         for innerIndex in range(len(customerRatings)):
-#             similarityScores.append(((customerRatings[innerIndex]) * (ratingsList[index][innerIndex])))
-
 customerRatingsCounter = Counter(customerRatings)
 def similarity(customerRatings, classmate_ratings):
     seqMatcher = difflib.SequenceMatcher(None, customerRatings, classmate_ratings)
@@ -63,12 +57,26 @@ for index in range(len(ratingsList)):
     compareCounter = Counter(ratingsList[index])
     similarityScores.append(similarity(customerRatingsCounter, compareCounter))
 
-# remove the customer's own ratings from the others
-# similarityScores.remove(1.0)
-
 mostSimilarIndices = sorted(((value, index) for index, value in enumerate(similarityScores)), reverse=True)
-# print(mostSimilarIndices)
-# print(customerRatings)
-# print(ratingsList[mostSimilarIndices[0][1]])
+mostSimilarRatings = ratingsList[mostSimilarIndices[0][1]]
+
 print("Hello, %s!" % customerName.rstrip())
-print(mostSimilarIndices)
+
+comparisonHighestRatingIndices = [i for i, rating in enumerate(mostSimilarRatings) if rating == 5]
+customerNotSeenIndices = [x for x, rating in enumerate(customerRatings) if rating == 0]
+
+recommendedMoviesIndices = []
+print("Based on your ratings of the 100 movies, we believe you might like the following movie(s) as well:")
+for index in range(len(customerNotSeenIndices)):
+    if customerNotSeenIndices[index] in comparisonHighestRatingIndices:
+        recommendedMoviesIndices.append(customerNotSeenIndices[index])
+
+if len(recommendedMoviesIndices) > 0:
+    for index in range(len(recommendedMoviesIndices)):
+        # show a maximum of 6 recommended movies
+        if index < 6:
+            print("   -", movie_input[customerNotSeenIndices[index]].rstrip())
+else:
+    mostSimilarRatings = ratingsList[mostSimilarIndices[1][1]]
+    comparisonHighestRatingIndices = [i for i, rating in enumerate(mostSimilarRatings) if rating == 5]
+    print("   -", movie_input[customerNotSeenIndices[index]].rstrip())
