@@ -1,5 +1,6 @@
 # Assignment 4 - Problem 3 - Console Hangman
 # Abdullah Khan - 30074457
+# Raiyan Sarwar - 30075746
 
 import sys, random
 
@@ -24,7 +25,7 @@ letters = ''.join(sorted(randomWord))
 print("Welcome to Console Hangman!")
 
 secretWord = ["_"] * len(randomWord)
-badGuesses = []
+wrongGuesses = []
 correctGuesses = []
 
 def checkIfInt(val):
@@ -35,12 +36,12 @@ def checkIfInt(val):
 
 while guesses > 0:
     print("\nThe secret word looks like:", " ".join([str(letter) for letter in secretWord]))
-    if len(badGuesses) > 0:
-        print("Your bad guesses so far:", " ".join([str(letter) for letter in badGuesses]))
+    if len(wrongGuesses) > 0:
+        print("Your wrong guesses so far:", " ".join([str(letter) for letter in wrongGuesses]))
     # "guesses" if you have more than one left, else "guess"
-    print("You have", guesses, "bad guess{} remaining".format("es" if guesses > 1 else ""))
+    print("You have", guesses, "wrong guess{} remaining".format("es" if guesses > 1 else ""))
     guess = input("What is your guess? ")
-    if guess in letters and not guess in badGuesses and not guess in correctGuesses and checkIfInt(guess) == False and guess.isalpha():
+    if guess in letters and not guess in wrongGuesses and not guess in correctGuesses and checkIfInt(guess) == False and guess.isalpha():
         letterIndices = [index for index, letter in enumerate(randomWord) if letter == guess]
         for i in range(len(letterIndices)):
             secretWord[letterIndices[i]] = guess
@@ -48,11 +49,11 @@ while guesses > 0:
         correctGuesses.append(guess)
     elif guess == "" or len(guess) > 1 or not checkIfInt(guess) == False or not guess.isalpha():
         print(" - Enter a valid letter (which you have not guessed before).")
-    elif guess in badGuesses or guess in correctGuesses:
+    elif guess in wrongGuesses or guess in correctGuesses:
         print(" - You have already guessed this letter before...")
     else:
         print(" - Sorry, there is no \"{}\" in the word".format(guess))
-        badGuesses.append(guess)
+        wrongGuesses.append(guess)
         guesses -= 1
         if guesses == 0 :
             print(" - You ran out of guesses! The secret word was: \"{}\"".format(randomWord))
