@@ -19,7 +19,7 @@ for i in range(len(allWords)):
 guesses = 8
 # pick a random word from the new list
 randomWord = random.choice(wordsToPickFrom)
-# letters in the randomWord, after removing duplicates
+# letters in the randomWord, sorted alphabetically
 letters = ''.join(sorted(randomWord))
 
 print("Welcome to Console Hangman!")
