@@ -36,15 +36,13 @@ grid = [[],
 # append flags to the 2D grid (while taking care of three-in-a-row cases)
 for outerIndex in range(len(grid)):
     streak = 0
-    for index in range(7):
+    for index in range(len(grid) - 2):
         randomFlag = str(random.choice(flags))
         # append the first two flags no matter if they are equal
         if len(grid[outerIndex]) < 2:
             grid[outerIndex].append(randomFlag)
         # check for equals now, starting from the third flag (horizontal only)
         elif len(grid[outerIndex]) >= 2:
-
-            # TODO: check for vertical equals
             if randomFlag == grid[outerIndex][index - 1] and randomFlag == grid[outerIndex][index - 2]:
                 # make a copy of the flags list and then remove the duplicate flag from the new list
                 # replace the duplicate flag on the grid with a random flag from the new list, then empty the new list
@@ -56,21 +54,11 @@ for outerIndex in range(len(grid)):
             else:
                 grid[outerIndex].append(randomFlag)
 
-
-
-        # if len(grid[outerIndex]) > 2:
-        #     if randomFlag == grid[outerIndex][index - 2]:
-        #         streak += 1
-        #         # flags.remove(randomFlag)
-        #         # newRandomFlag = random.choice(flags)
-        #         # grid[outerIndex].append(newRandomFlag)
-        #         # flags.append(randomFlag)
-        #         print("same")
-        #     elif streak < 2:
-        #         grid[outerIndex].append(randomFlag)
-        # else:
-        #     grid[outerIndex].append(randomFlag)
-    # print(len(grid[outerIndex]))
+print([i[index] for i in grid[::-1]])
+# for index in range(len(grid)):
+    # for innerIndex in range(len(grid[index])):
+    # print(grid[index][0])
+    # print("")
 
 pictureGrid = []
 for index in range(len(grid)):
