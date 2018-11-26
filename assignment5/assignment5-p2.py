@@ -5,6 +5,7 @@
 import random, stddraw, picture, math
 from itertools import groupby
 from color import Color
+from time import sleep
 
 bg = Color(35, 35, 35)
 
@@ -42,7 +43,7 @@ for outerIndex in range(len(grid)):
             grid[outerIndex].append(randomShape)
         # check for equals now, starting from the third hape (horizontal only)
         elif len(grid[outerIndex]) >= 2:
-            if randomShape == grid[outerIndex][index - 1] and randomShape == grid[outerIndex][index - 2]:
+            if randomShape == grid[outerIndex][index - 1] and randomShape == grid[outerIndex][index - 2] and grid[outerIndex][index - 2] == grid[outerIndex][index - 1]:
                 # make a copy of the shapes list and then remove the duplicate hape from the new list
                 # replace the duplicate hape on the grid with a random hape from the new list, then empty the new list
                 shapesExcludingDuplicate = shapes.copy()
@@ -91,18 +92,27 @@ def drawNavigator(mouseX, mouseY):
 
 def swapShapes():
     global boardGrid
+    beforeSwap = boardGrid
     # print(indices)
     for index in range(len(indices) - 1):
-        if index % 2 == 0:
+        if (index) % 2 == 0 and len(rectCoordinates) % 2 == 0:
             # get the last two elements in the indices list (the two indices which need to be swapped)
-            swapIndices = indices[-2:]
+            swapIndices = indices[-3:]
             # check if the shapes that need to be swapped are adjacent before swapping
-            if (indices[index][0] == indices[index - 1][0]) or (indices):
+            if (indices[index][0] == indices[index - 1][0]) or (indices[index - 1][1] == indices[index - 1][1]):
                 reversedGrid[swapIndices[index - 1][0]][swapIndices[index - 1][1]], reversedGrid[swapIndices[index][0]][swapIndices[index][1]] = reversedGrid[swapIndices[index][0]][swapIndices[index][1]], reversedGrid[swapIndices[index - 1][0]][swapIndices[index - 1][1]]
                 boardGrid = reversedGrid[::-1]
                 del swapIndices[:]
-    showBoard(boardGrid)
-    checkForEquals()
+                del indices[:]
+
+
+    if checkForEquals():
+        removeEquals()
+        showBoard(boardGrid)
+    else:
+        showBoard(beforeSwap)
+        # print("revert back before swap")
+
 
 # reverse the reversed grid to bring it back to normal
 boardGrid = reversedGrid[::-1]
@@ -114,36 +124,86 @@ def checkForEquals():
         consecutiveTaffies = [sum(1 for _ in group) for _, group in groupby(reversedBoardGrid[outerIndex])]
         for index in range(len(consecutiveTaffies)):
             if consecutiveTaffies[index] >= 3:
-                print("equal (horizontal), at indices", outerIndex + 1, index + 1)
-    print("")
-        # for index in range(len(reversedBoardGrid[outerIndex])):
-        # currentShape = reversedBoardGrid[outerIndex][index]
-            # if currentShape == reversedBoardGrid[outerIndex][index - 1] and currentShape == reversedBoardGrid[outerIndex][index - 2]:
-                # print("equal (horizontal)")
+                # print("equal (horizontal), at indices", outerIndex + 1, index + 1)
+                return True
     for outerIndex in range(7):
         for index in range(len(reversedBoardGrid)):
             if index > 1:
                 if (reversedBoardGrid[index][verticalColumn] == reversedBoardGrid[index - 1][verticalColumn] and
                 reversedBoardGrid[index][verticalColumn] == reversedBoardGrid[index - 2][verticalColumn]):
-                    print("equal (vertical)")
+                    return True
             elif index > 2:
                 if (reversedBoardGrid[index][verticalColumn] == reversedBoardGrid[index - 1][verticalColumn] and
                 reversedBoardGrid[index][verticalColumn] == reversedBoardGrid[index - 2][verticalColumn] and
                 reversedBoardGrid[index][verticalColumn] == reversedBoardGrid[index - 2][verticalColumn] == reversedBoardGrid[index - 3][verticalColumn]):
-                    print("equal (vertical)")
+                    return True
+            elif index > 3:
+                if (reversedBoardGrid[index][verticalColumn] == reversedBoardGrid[index - 1][verticalColumn] and
+                reversedBoardGrid[index][verticalColumn] == reversedBoardGrid[index - 2][verticalColumn] and
+                reversedBoardGrid[index][verticalColumn] == reversedBoardGrid[index - 2][verticalColumn] == reversedBoardGrid[index - 3][verticalColumn] and
+                reversedBoardGrid[index][verticalColumn] == reversedBoardGrid[index - 2][verticalColumn] == reversedBoardGrid[index - 3][verticalColumn] == reversedBoardGrid[index - 4][verticalColumn]):
+                    return True
+        verticalColumn += 1
+
+def removeEquals():
+    verticalColumn = 0
+    for outerIndex in range(len(reversedBoardGrid)):
+        consecutiveTaffies = [sum(1 for _ in group) for _, group in groupby(reversedBoardGrid[outerIndex])]
+        for index in range(len(consecutiveTaffies)):
+            if consecutiveTaffies[index] >= 3:
+                # print("equal (horizontal), at indices", outerIndex + 1, index + 1)
+                reversedBoardGrid[outerIndex][index] = ""
+                reversedBoardGrid[outerIndex][index + 1] = ""
+                reversedBoardGrid[outerIndex][index + 2] = ""
+            elif consecutiveTaffies[index] >= 4:
+                reversedBoardGrid[outerIndex][index + 1] = ""
+                reversedBoardGrid[outerIndex][index + 2] = ""
+                reversedBoardGrid[outerIndex][index + 3] = ""
+                reversedBoardGrid[outerIndex][index + 4] = ""
+    for outerIndex in range(7):
+        for index in range(len(reversedBoardGrid)):
+            if index > 1:
+                if (reversedBoardGrid[index][verticalColumn] == reversedBoardGrid[index - 1][verticalColumn] and
+                reversedBoardGrid[index][verticalColumn] == reversedBoardGrid[index - 2][verticalColumn]):
+                    reversedBoardGrid[index][verticalColumn] = ""
+                    reversedBoardGrid[index - 1][verticalColumn] = ""
+                    reversedBoardGrid[index][verticalColumn] = ""
+                    reversedBoardGrid[index - 2][verticalColumn] = ""
+            elif index > 2:
+                if (reversedBoardGrid[index][verticalColumn] == reversedBoardGrid[index - 1][verticalColumn] and
+                reversedBoardGrid[index][verticalColumn] == reversedBoardGrid[index - 2][verticalColumn] and
+                reversedBoardGrid[index][verticalColumn] == reversedBoardGrid[index - 2][verticalColumn] == reversedBoardGrid[index - 3][verticalColumn]):
+                    reversedBoardGrid[index][verticalColumn] = ""
+                    reversedBoardGrid[index - 1][verticalColumn] = ""
+                    reversedBoardGrid[index][verticalColumn] = ""
+                    reversedBoardGrid[index - 2][verticalColumn] = ""
+                    reversedBoardGrid[index - 3][verticalColumn] = ""
+            elif index > 3:
+                if (reversedBoardGrid[index][verticalColumn] == reversedBoardGrid[index - 1][verticalColumn] and
+                reversedBoardGrid[index][verticalColumn] == reversedBoardGrid[index - 2][verticalColumn] and
+                reversedBoardGrid[index][verticalColumn] == reversedBoardGrid[index - 2][verticalColumn] == reversedBoardGrid[index - 3][verticalColumn] and
+                reversedBoardGrid[index][verticalColumn] == reversedBoardGrid[index - 2][verticalColumn] == reversedBoardGrid[index - 3][verticalColumn] == reversedBoardGrid[index - 4][verticalColumn]):
+                    reversedBoardGrid[index][verticalColumn] = ""
+                    reversedBoardGrid[index - 1][verticalColumn] = ""
+                    reversedBoardGrid[index][verticalColumn] = ""
+                    reversedBoardGrid[index - 2][verticalColumn] = ""
+                    reversedBoardGrid[index - 4][verticalColumn] = ""
         verticalColumn += 1
 
 def showBoard(board):
     pictureGrid = []
     for index in range(len(grid)):
         for innerIndex in range(len(grid[index])):
-            pictureGrid.append(board[index][innerIndex])
+            if board[index][innerIndex] == "":
+                pictureGrid.append("empty")
+            else:
+                pictureGrid.append(board[index][innerIndex])
     pictureIndex = 0
     for outerIndex in range(1, len(grid) + 1):
         for index in range(1, len(grid[outerIndex - 1]) + 1):
             pictureIndex += 1
             stddraw.picture(picture.Picture(pictureGrid[pictureIndex - 1] + ".png"), index * 2, outerIndex * 2)
-print(boardGrid[::-1])
+
 stddraw.clear(bg)
 while True:
     showBoard(boardGrid)
