@@ -8,20 +8,25 @@ from color import Color
 
 bg = Color(35, 35, 35)
 
-def fillBrownian(array, firstIndex, lastIndex, variance, scaleFactor, depth=8):
-    if depth == 0:
+def fillBrownian(array, firstIndex, lastIndex, variance, scaleFactor):
+    # base case to stop recursion if there is not midpoint (first and last are together)
+    if (firstIndex - lastIndex) == 0:
         return
 
-    midpoint = (array[firstIndex] + array[lastIndex]) / 2.0
+    # get the value of the mean in the partitioned list
+    average = (array[firstIndex] + array[lastIndex]) / 2.0
     # mean is always zero when using gauss(), and we need to find the standard deviation using the sqrt of the variance
     sigma = gauss(0.0, variance ** (1/2))
+    # get the index of the midpoint in the partitioned list
     midIndex = (firstIndex + lastIndex) // 2
-    brownianVal = midpoint + sigma
+    brownianVal = average + sigma
     array[midIndex] = brownianVal
-    fillBrownian(array, firstIndex, midIndex, variance / scaleFactor, scaleFactor, depth - 1)
-    fillBrownian(array, midIndex + 1, lastIndex, variance / scaleFactor, scaleFactor, depth - 1)
+    # recur on the sub intervals of the list
+    fillBrownian(array, firstIndex, midIndex, variance / scaleFactor, scaleFactor)
+    fillBrownian(array, midIndex + 1, lastIndex, variance / scaleFactor, scaleFactor)
 
 def main():
+    # initialize list with 129 values (all are 0.0)
     brownianList = [0.0] * 129
     hurstExp = float(sys.argv[1])
     scaleFactor = (2.0 ** (2.0 * hurstExp))
