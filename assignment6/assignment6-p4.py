@@ -6,48 +6,52 @@ from guitarP4 import guitarString as gs
 from picture import Picture
 from collections import deque
 
-allKeys = "q2we4r5ty7u8i9op-[=zxdcfvgbnjmk,.;/ "
-
-keys = list(allKeys)
-
-keysPressed = deque()
-frequencies = deque()
-guitarStrings = deque()
-
 # set up canvas and draw a background picture
 stddraw.setCanvasSize(600, 600)
 guitarPicture = Picture("guitar.png")
 stddraw.picture(guitarPicture)
-stddraw.show(735)
 
-# populate the frequencies list using the semitone formula (and first value is 110.0)
-frequencies.append(110.00)
-for index in range(len(keys)):
-    frequencies.append((2 ** (1/12)) * frequencies[index])
+def main():
+    stddraw.show(360)
 
-# create guitar string objects with different frequencies taken from the frequencies list
-for index in range(len(frequencies)):
-    guitarStrings.append(gs(frequencies[index]))
+    allKeys = "q2we4r5ty7u8i9op-[=zxdcfvgbnjmk,.;/ "
+    keys = list(allKeys)
 
-keysToTick = []
+    keysPressed = deque()
+    frequencies = deque()
+    guitarStrings = deque()
+    keysToTick = deque()
 
-escape = False
-while not escape:
-    # threading.Timer(1/60, ).start()
-    stddraw._checkForEvents()
-    while stddraw.hasNextKeyTyped():
-        key = stddraw.nextKeyTyped()
-        if not key == chr(27):
+    # populate the frequencies list using the semitone formula (and first value is 110.0)
+    frequencies.append(110.00)
+    for index in range(len(keys)):
+        frequencies.append((2 ** (1/12)) * frequencies[index])
+
+    # create guitar string objects with different frequencies taken from the frequencies list
+    for index in range(len(frequencies)):
+        guitarStrings.append(gs(frequencies[index]))
+
+    escape = False
+    timer = 0
+    while not escape:
+        timer += 1
+        if timer % 3600 == 0:
+            stddraw._checkForEvents()
+        while stddraw.hasNextKeyTyped():
+            key = stddraw.nextKeyTyped()
             if key in keys:
-                # keysPressed.append(key)
-                guitarStrings[keys.index(key)].pluck()
+                keysPressed.append(key)
+                guitarStrings[keys.index(keysPressed[0])].pluck()
                 keysToTick.append(key)
-                # keysPressed.popleft()
-        else:
-            escape = True
-            print("goodbye")
+                keysPressed.popleft()
+            elif key == chr(27):
+                escape = True
+                print("goodbye")
 
-    string = guitarStrings[0].tick()
-    for index in range(len(keysToTick)):
-        string += guitarStrings[keys.index(keysToTick[index])].tick()
-    stdaudio.playSample(string)
+        string = guitarStrings[0].tick()
+        for index in range(1, len(guitarStrings) - 1):
+            string += guitarStrings[index].tick()
+        stdaudio.playSample(string)
+
+if __name__ == '__main__':
+    main()
