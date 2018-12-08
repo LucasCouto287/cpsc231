@@ -20,7 +20,6 @@ def main():
     keysPressed = deque()
     frequencies = deque()
     guitarStrings = deque()
-    keysToTick = deque()
 
     # populate the frequencies list using the semitone formula (and first value is 110.0)
     frequencies.append(110.00)
@@ -35,6 +34,7 @@ def main():
     timer = 0
     while not escape:
         timer += 1
+        # check for events once in a while instead of calling this function repeatedly
         if timer % 3600 == 0:
             stddraw._checkForEvents()
         while stddraw.hasNextKeyTyped():
@@ -42,12 +42,11 @@ def main():
             if key in keys:
                 keysPressed.append(key)
                 guitarStrings[keys.index(keysPressed[0])].pluck()
-                keysToTick.append(key)
                 keysPressed.popleft()
             elif key == chr(27):
                 escape = True
                 print("goodbye")
-
+        # sum all the tick functions in the wavetables so they can all play simultaneously
         string = guitarStrings[0].tick()
         for index in range(1, len(guitarStrings) - 1):
             string += guitarStrings[index].tick()
